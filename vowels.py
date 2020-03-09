@@ -1,11 +1,7 @@
-vowels = ['a','e','i','o','u']
+vowels = set('aeuio')
 word = input("Provide a word to search for vowels: ")
-found = {}
 
-for letter in word:
-    if letter in vowels:
-        found.setdefault(letter, 0)
-        found[letter] +=1
+found = vowels.intersection(set(word))
+for vowel in found:
+    print(vowel)
 
-for k, v in sorted(found.items()):
-    print(k, 'was found', v, 'time(s).')
