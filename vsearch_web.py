@@ -36,9 +36,14 @@ def entry_page() -> 'html':
 @app.route('/viewlog')
 def view_the_log() -> str:
     """Display the contents of the log file as a HTML table."""
+    contents = []
     with open ('vsearch.log') as log:
-        contents = log.read()
-    return escape(contents)
+        for line in log:
+            contents.append([])
+            for item in line.split('|'):
+                contents[-1].append(escape(item))
+    return str(contents)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
