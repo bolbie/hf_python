@@ -7,10 +7,7 @@ app = Flask(__name__)
 def log_request(req: 'flask_request', res: str) -> None:
     """Log details of the web request and the results."""
     with open('vsearch.log', 'a') as log:
-        print(req.form, res, file=log, end='|')
-        print(req.remote_addr, file=log, end='|')
-        print(req.user_agent, file=log, end='|')
-        print(res, file=log)
+        print(req.form, req.remote_addr, req.user_agent, res, file=log, sep='|')
 
 
 @app.route('/search_for', methods=['POST'])

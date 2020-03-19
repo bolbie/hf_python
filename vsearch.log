@@ -1,3 +1,4 @@
-ImmutableMultiDict([('phrase', 'Kawabanga Dude!'), ('letters', 'renesance')]) {'n', 'e', 'a'}|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'n', 'e', 'a'}
-ImmutableMultiDict([('phrase', 'Karavan Alibabi'), ('letters', 'abcde')]) {'b', 'a'}|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'b', 'a'}
-ImmutableMultiDict([('phrase', 'Shaltai Baltai'), ('letters', 'kmlnop')]) {'l'}|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'l'}
+ImmutableMultiDict([('phrase', 'Kawabanga Dude!'), ('letters', 'abcd')])|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'d', 'a', 'b'}
+ImmutableMultiDict([('phrase', 'A life is like a chocolate'), ('letters', 'klmnop')])|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'l', 'k', 'o'}
+ImmutableMultiDict([('phrase', 'Karavan Alibabi'), ('letters', 'vwtd')])|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'v'}
+ImmutableMultiDict([('phrase', 'Shaltai Baltai'), ('letters', 'eijl')])|127.0.0.1|Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0|{'l', 'i'}
