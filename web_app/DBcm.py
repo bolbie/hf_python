@@ -1,6 +1,6 @@
 import mysql.connector
 
-class UseDatabase:
+class UseDataBase:
 
     def __init__(self, config: dict) -> None:
         self.configuration = config
