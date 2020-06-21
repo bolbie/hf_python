@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, escape
+from flask import Flask, render_template, request, escape, session
 from vsearch import search_for_letters
+
 from DBcm import UseDataBase
+from checker import check_logged_in
 
 app = Flask(__name__)
 
@@ -9,9 +11,20 @@ app.config['dbconfig'] = { 'host':'127.0.0.1',
                            'password':'vsearchpasswd',
                            'database':'vsearchlogDB' }
 
+@app.route('/login')
+def do_login() -> str:
+    session['logged_in'] = True
+    return 'You are now logged in'
+
+
+@app.route('/logout')
+def do_logout() -> str:
+    session.pop('logged_in')
+    return 'You are now logged out'
+
+
 def log_request(req: 'flask_request', res: str) -> None:
     """Log details of the web request and the results in MySQL database."""
-    
     with UseDataBase(app.config['dbconfig']) as cursor:
         _SQL = """insert into log
               (phrase, letters, ip, browser_string, results)
@@ -48,6 +61,7 @@ def entry_page() -> 'html':
 
 
 @app.route('/viewlog')
+@check_logged_in
 def view_the_log() -> 'html':
     """Display the contents of the vsearchlogDB as a HTML table."""
     contents = []
@@ -60,6 +74,9 @@ def view_the_log() -> 'html':
                             the_title='View Log',
                             the_row_titles=titles,
                             the_data=contents)
+
+
+app.secret_key = 'BolbieHFSecretKey'
 
 
 if __name__ == '__main__':
