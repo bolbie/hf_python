@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, escape, session
 from vsearch import search_for_letters
+from threading import Thread
+from time import sleep
 
 from DBcm import UseDataBase, ConnectionError, CredentialsError, SQLError
 from checker import check_logged_in
@@ -25,6 +27,7 @@ def do_logout() -> str:
 
 def log_request(req: 'flask_request', res: str) -> None:
     """Log details of the web request and the results in MySQL database."""
+    sleep(10)
     with UseDataBase(app.config['dbconfig']) as cursor:
         _SQL = """insert into log
               (phrase, letters, ip, browser_string, results)
@@ -45,7 +48,8 @@ def do_search() -> 'html':
     title = 'Here are your results:'
     results = str(search_for_letters(phrase, letters))
     try:
-        log_request(request, results)
+        log_req=Thread(target=log_request, args=(request, results))
+        log_req.start()
     except Exception as err:
         print('***** Logging failed with this error:', str(err))
     return render_template('results.html',
@@ -53,6 +57,7 @@ def do_search() -> 'html':
                            the_letters=letters,
                            the_title=title,
                            the_results=results)
+    
 
 
 @app.route('/')
