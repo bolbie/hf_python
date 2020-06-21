@@ -44,7 +44,10 @@ def do_search() -> 'html':
     letters = request.form['letters']
     title = 'Here are your results:'
     results = str(search_for_letters(phrase, letters))
-    log_request(request, results)
+    try:
+        log_request(request, results)
+    except Exception as err:
+        print('***** Logging failed with this error:', str(err))
     return render_template('results.html',
                            the_phrase=phrase,
                            the_letters=letters,
@@ -64,16 +67,18 @@ def entry_page() -> 'html':
 @check_logged_in
 def view_the_log() -> 'html':
     """Display the contents of the vsearchlogDB as a HTML table."""
-    contents = []
-    with UseDataBase(app.config['dbconfig']) as cursor:
-        _SQL = """select phrase, letters, ip, browser_string, results from log"""
-        cursor.execute(_SQL)
-        contents = cursor.fetchall()
-    titles = ('Phrase', 'Letters', 'Remote Addr', 'User Agent', 'Results')
-    return render_template ('viewlog.html',
-                            the_title='View Log',
-                            the_row_titles=titles,
-                            the_data=contents)
+    try:
+        with UseDataBase(app.config['dbconfig']) as cursor:
+            _SQL = """select phrase, letters, ip, browser_string, results from log"""
+            cursor.execute(_SQL)
+            contents = cursor.fetchall()
+        titles = ('Phrase', 'Letters', 'Remote Addr', 'User Agent', 'Results')
+        return render_template ('viewlog.html',
+                                the_title='View Log',
+                                the_row_titles=titles,
+                                the_data=contents)
+    except Exception as err:
+        print('Something went wrong:', str(err))
 
 
 app.secret_key = 'BolbieHFSecretKey'
