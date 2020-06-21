@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, escape, session
 from vsearch import search_for_letters
 
-from DBcm import UseDataBase
+from DBcm import UseDataBase, ConnectionError
 from checker import check_logged_in
 
 app = Flask(__name__)
@@ -77,8 +77,11 @@ def view_the_log() -> 'html':
                                 the_title='View Log',
                                 the_row_titles=titles,
                                 the_data=contents)
+    except ConnectionError as err:
+        print('Is your database switched on? Error:', str(err))
     except Exception as err:
         print('Something went wrong:', str(err))
+    return 'Error'
 
 
 app.secret_key = 'BolbieHFSecretKey'
