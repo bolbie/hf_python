@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, escape, session
+from flask import Flask, render_template, request, escape, session, copy_current_request_context
 from vsearch import search_for_letters
 from threading import Thread
 from time import sleep
@@ -13,6 +13,7 @@ app.config['dbconfig'] = { 'host':'127.0.0.1',
                            'password':'vsearchpasswd',
                            'database':'vsearchlogDB' }
 
+
 @app.route('/login')
 def do_login() -> str:
     session['logged_in'] = True
@@ -25,24 +26,25 @@ def do_logout() -> str:
     return 'You are now logged out'
 
 
-def log_request(req: 'flask_request', res: str) -> None:
-    """Log details of the web request and the results in MySQL database."""
-    sleep(10)
-    with UseDataBase(app.config['dbconfig']) as cursor:
-        _SQL = """insert into log
-              (phrase, letters, ip, browser_string, results)
-              values
-              (%s, %s, %s, %s, %s)"""
-        cursor.execute(_SQL, (req.form['phrase'],
-                          req.form['letters'],
-                          req.remote_addr,
-                          req.user_agent.browser,
-                          res ))
-
-
 @app.route('/search_for', methods=['POST'])
 def do_search() -> 'html':
     """Extract the posted data; perform the search; return results."""
+
+    @copy_current_request_context
+    def log_request(req: 'flask_request', res: str) -> None:
+        """Log details of the web request and the results in MySQL database."""
+        sleep(10)
+        with UseDataBase(app.config['dbconfig']) as cursor:
+            _SQL = """insert into log
+                  (phrase, letters, ip, browser_string, results)
+                  values
+                  (%s, %s, %s, %s, %s)"""
+            cursor.execute(_SQL, (req.form['phrase'],
+                              req.form['letters'],
+                              req.remote_addr,
+                              req.user_agent.browser,
+                              res ))
+
     phrase = request.form['phrase']
     letters = request.form['letters']
     title = 'Here are your results:'
@@ -57,7 +59,6 @@ def do_search() -> 'html':
                            the_letters=letters,
                            the_title=title,
                            the_results=results)
-    
 
 
 @app.route('/')
